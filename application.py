@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, send_from_directory
 import pickle
 import os
 
-# Load model artifacts
+
 with open("model/best_model.pkl", "rb") as f:
     model = pickle.load(f)
 
@@ -12,7 +12,6 @@ with open("model/vectorizer.pkl", "rb") as f:
 with open("model/label_encoder.pkl", "rb") as f:
     le = pickle.load(f)
 
-# Threshold (tuned)
 THRESHOLD = -0.9
 
 application = Flask(__name__)
@@ -30,13 +29,12 @@ def predict():
 
     text = data["text"]
 
-    # Vectorize
+
     X = vectorizer.transform([text])
 
-    # Decision score
     score = model.decision_function(X)[0]
 
-    # Apply threshold
+
     label = "spam" if score > THRESHOLD else "ham"
 
     return jsonify({
